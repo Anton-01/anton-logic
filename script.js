@@ -1,0 +1,691 @@
+/* ==========================================================================
+   Anton Logic - JavaScript
+   Main scripts for interactivity, animations, and bilingual support
+   ========================================================================== */
+
+(function () {
+    'use strict';
+
+    // ==========================================================================
+    // Configuration
+    // ==========================================================================
+
+    const CONFIG = {
+        animationDuration: 600,
+        scrollOffset: 80,
+        counterDuration: 2000,
+        preloaderDelay: 500
+    };
+
+    // ==========================================================================
+    // DOM Elements
+    // ==========================================================================
+
+    const DOM = {
+        preloader: document.getElementById('preloader'),
+        header: document.getElementById('header'),
+        navMenu: document.getElementById('nav-menu'),
+        navToggle: document.getElementById('nav-toggle'),
+        langToggle: document.getElementById('lang-toggle'),
+        contactForm: document.getElementById('contact-form'),
+        html: document.documentElement
+    };
+
+    // ==========================================================================
+    // Language System
+    // ==========================================================================
+
+    const LanguageSystem = {
+        currentLang: 'es',
+
+        init() {
+            // Check for saved language preference
+            const savedLang = localStorage.getItem('antonlogic-lang');
+            if (savedLang) {
+                this.currentLang = savedLang;
+            }
+
+            // Check browser language
+            if (!savedLang) {
+                const browserLang = navigator.language.substring(0, 2);
+                if (browserLang === 'en') {
+                    this.currentLang = 'en';
+                }
+            }
+
+            // Apply initial language
+            this.setLanguage(this.currentLang);
+
+            // Bind toggle event
+            if (DOM.langToggle) {
+                DOM.langToggle.addEventListener('click', () => this.toggleLanguage());
+            }
+        },
+
+        toggleLanguage() {
+            this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
+            this.setLanguage(this.currentLang);
+        },
+
+        setLanguage(lang) {
+            // Update HTML lang attribute
+            DOM.html.setAttribute('lang', lang);
+            DOM.html.setAttribute('data-lang', lang);
+
+            // Update toggle button text
+            const langDisplay = DOM.langToggle?.querySelector('.lang-current');
+            if (langDisplay) {
+                langDisplay.textContent = lang.toUpperCase();
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-es][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = text;
+                    } else if (element.tagName === 'OPTION') {
+                        element.textContent = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+
+            // Update meta tags for SEO
+            this.updateMetaTags(lang);
+
+            // Save preference
+            localStorage.setItem('antonlogic-lang', lang);
+        },
+
+        updateMetaTags(lang) {
+            const titles = {
+                es: 'Anton Logic | Desarrollo de Software & Diseño Web Profesional',
+                en: 'Anton Logic | Software Development & Professional Web Design'
+            };
+
+            const descriptions = {
+                es: 'Anton Logic - Expertos en desarrollo de software a medida, páginas web profesionales, APIs, consultoría técnica y desarrollo de marca. Transformamos tus ideas en soluciones digitales.',
+                en: 'Anton Logic - Experts in custom software development, professional websites, APIs, technical consulting, and brand development. We transform your ideas into digital solutions.'
+            };
+
+            document.title = titles[lang];
+
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (metaDescription) {
+                metaDescription.setAttribute('content', descriptions[lang]);
+            }
+
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) {
+                ogTitle.setAttribute('content', titles[lang]);
+            }
+
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            if (ogDescription) {
+                ogDescription.setAttribute('content', descriptions[lang]);
+            }
+        }
+    };
+
+    // ==========================================================================
+    // Navigation System
+    // ==========================================================================
+
+    const NavigationSystem = {
+        init() {
+            this.bindScrollEvents();
+            this.bindMobileMenu();
+            this.bindSmoothScroll();
+            this.setActiveLink();
+        },
+
+        bindScrollEvents() {
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                // Header background on scroll
+                if (currentScroll > 50) {
+                    DOM.header?.classList.add('scrolled');
+                } else {
+                    DOM.header?.classList.remove('scrolled');
+                }
+
+                // Update active nav link
+                this.setActiveLink();
+
+                lastScroll = currentScroll;
+            }, { passive: true });
+        },
+
+        bindMobileMenu() {
+            if (DOM.navToggle && DOM.navMenu) {
+                DOM.navToggle.addEventListener('click', () => {
+                    DOM.navToggle.classList.toggle('active');
+                    DOM.navMenu.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                });
+
+                // Close menu when clicking a link
+                DOM.navMenu.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        DOM.navToggle.classList.remove('active');
+                        DOM.navMenu.classList.remove('active');
+                        document.body.classList.remove('no-scroll');
+                    });
+                });
+            }
+        },
+
+        bindSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    const href = anchor.getAttribute('href');
+                    if (href === '#') return;
+
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+
+                    if (target) {
+                        const offsetTop = target.offsetTop - CONFIG.scrollOffset;
+
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        },
+
+        setActiveLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPosition = window.pageYOffset + CONFIG.scrollOffset + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+    };
+
+    // ==========================================================================
+    // Animation System (AOS-like)
+    // ==========================================================================
+
+    const AnimationSystem = {
+        init() {
+            this.observeElements();
+        },
+
+        observeElements() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-aos-delay') || 0;
+
+                        setTimeout(() => {
+                            entry.target.classList.add('aos-animate');
+                        }, parseInt(delay));
+
+                        // Unobserve after animation
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('[data-aos]').forEach(element => {
+                observer.observe(element);
+            });
+        }
+    };
+
+    // ==========================================================================
+    // Counter Animation
+    // ==========================================================================
+
+    const CounterSystem = {
+        init() {
+            this.observeCounters();
+        },
+
+        observeCounters() {
+            const counters = document.querySelectorAll('[data-count]');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        this.animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => observer.observe(counter));
+        },
+
+        animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = CONFIG.counterDuration;
+            const startTime = performance.now();
+
+            const updateCounter = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function (ease-out)
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(easeOut * target);
+
+                element.textContent = current;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            };
+
+            requestAnimationFrame(updateCounter);
+        }
+    };
+
+    // ==========================================================================
+    // Form Handler
+    // ==========================================================================
+
+    const FormSystem = {
+        init() {
+            if (DOM.contactForm) {
+                DOM.contactForm.addEventListener('submit', (e) => this.handleSubmit(e));
+            }
+        },
+
+        handleSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(DOM.contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Show loading state
+            const submitBtn = DOM.contactForm.querySelector('.form-submit');
+            const originalText = submitBtn.innerHTML;
+            const currentLang = LanguageSystem.currentLang;
+
+            submitBtn.innerHTML = `
+                <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+                <span>${currentLang === 'es' ? 'Enviando...' : 'Sending...'}</span>
+            `;
+            submitBtn.disabled = true;
+
+            // Simulate form submission (replace with actual API call)
+            setTimeout(() => {
+                console.log('Form data:', data);
+
+                // Success message
+                const successMessage = currentLang === 'es'
+                    ? '¡Mensaje enviado con éxito! Te contactaremos pronto.'
+                    : 'Message sent successfully! We\'ll contact you soon.';
+
+                this.showNotification(successMessage, 'success');
+
+                // Reset form
+                DOM.contactForm.reset();
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+
+            }, 2000);
+        },
+
+        showNotification(message, type = 'success') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        ${type === 'success'
+                    ? '<path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+                    : '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+                }
+                    </svg>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            `;
+
+            // Add notification styles if not present
+            if (!document.querySelector('#notification-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'notification-styles';
+                styles.textContent = `
+                    .notification {
+                        position: fixed;
+                        bottom: 24px;
+                        right: 24px;
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                        padding: 16px 20px;
+                        background: white;
+                        border-radius: 12px;
+                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                        z-index: 1000;
+                        animation: slideIn 0.3s ease;
+                    }
+                    
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                    
+                    .notification-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+                    
+                    .notification-success .notification-content svg {
+                        color: #10B981;
+                    }
+                    
+                    .notification-error .notification-content svg {
+                        color: #EF4444;
+                    }
+                    
+                    .notification-content span {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #1F2937;
+                    }
+                    
+                    .notification-close {
+                        padding: 4px;
+                        color: #9CA3AF;
+                        cursor: pointer;
+                        transition: color 0.2s;
+                    }
+                    
+                    .notification-close:hover {
+                        color: #4B5563;
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+
+            document.body.appendChild(notification);
+
+            // Close button
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.remove();
+            });
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideIn 0.3s ease reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+    };
+
+    // ==========================================================================
+    // Preloader
+    // ==========================================================================
+
+    const PreloaderSystem = {
+        init() {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if (DOM.preloader) {
+                        DOM.preloader.classList.add('hidden');
+                    }
+                }, CONFIG.preloaderDelay);
+            });
+        }
+    };
+
+    // ==========================================================================
+    // Cursor Effects (Optional - for desktop)
+    // ==========================================================================
+
+    const CursorSystem = {
+        init() {
+            // Only for non-touch devices
+            if ('ontouchstart' in window) return;
+
+            // Add cursor follower for interactive elements
+            document.querySelectorAll('a, button, .service-card, .portfolio-card').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    document.body.style.cursor = 'pointer';
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    document.body.style.cursor = 'default';
+                });
+            });
+        }
+    };
+
+    // ==========================================================================
+    // Parallax Effects (Subtle)
+    // ==========================================================================
+
+    const ParallaxSystem = {
+        init() {
+            // Only for larger screens
+            if (window.innerWidth < 1024) return;
+
+            const orbs = document.querySelectorAll('.hero-orb');
+
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+                orbs.forEach((orb, index) => {
+                    const multiplier = index === 0 ? 1 : -0.5;
+                    orb.style.transform = `translate(${x * multiplier}px, ${y * multiplier}px)`;
+                });
+            }, { passive: true });
+        }
+    };
+
+    // ==========================================================================
+    // Typing Effect for Code Mockup
+    // ==========================================================================
+
+    const TypingSystem = {
+        init() {
+            const codeElement = document.querySelector('.mockup-code code');
+            if (!codeElement) return;
+
+            // Store original HTML
+            const originalHTML = codeElement.innerHTML;
+
+            // Simple cursor blink effect
+            const style = document.createElement('style');
+            style.textContent = `
+                .mockup-code::after {
+                    content: '|';
+                    animation: blink 1s step-end infinite;
+                    color: #F8F8F2;
+                }
+                
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    };
+
+    // ==========================================================================
+    // Service Worker Registration (for PWA capability)
+    // ==========================================================================
+
+    const PWASystem = {
+        init() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    // Uncomment when you have a service worker file
+                    // navigator.serviceWorker.register('/sw.js');
+                });
+            }
+        }
+    };
+
+    // ==========================================================================
+    // Performance Optimization
+    // ==========================================================================
+
+    const PerformanceSystem = {
+        init() {
+            // Lazy load images
+            this.lazyLoadImages();
+
+            // Defer non-critical operations
+            this.deferOperations();
+        },
+
+        lazyLoadImages() {
+            if ('loading' in HTMLImageElement.prototype) {
+                // Browser supports native lazy loading
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    img.src = img.dataset.src;
+                });
+            } else {
+                // Fallback for older browsers
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
+        },
+
+        deferOperations() {
+            // Use requestIdleCallback for non-critical work
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                    // Analytics, third-party scripts, etc.
+                });
+            }
+        }
+    };
+
+    // ==========================================================================
+    // Accessibility Improvements
+    // ==========================================================================
+
+    const AccessibilitySystem = {
+        init() {
+            // Focus visible styles
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+
+            document.addEventListener('mousedown', () => {
+                document.body.classList.remove('keyboard-navigation');
+            });
+
+            // Add focus visible styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .keyboard-navigation *:focus {
+                    outline: 2px solid var(--color-primary);
+                    outline-offset: 2px;
+                }
+                
+                *:focus:not(:focus-visible) {
+                    outline: none;
+                }
+                
+                *:focus-visible {
+                    outline: 2px solid var(--color-primary);
+                    outline-offset: 2px;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Escape key closes mobile menu
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && DOM.navMenu?.classList.contains('active')) {
+                    DOM.navToggle.click();
+                }
+            });
+        }
+    };
+
+    // ==========================================================================
+    // Initialize Everything
+    // ==========================================================================
+
+    function init() {
+        PreloaderSystem.init();
+        LanguageSystem.init();
+        NavigationSystem.init();
+        AnimationSystem.init();
+        CounterSystem.init();
+        FormSystem.init();
+        CursorSystem.init();
+        ParallaxSystem.init();
+        TypingSystem.init();
+        PerformanceSystem.init();
+        AccessibilitySystem.init();
+
+        console.log('🚀 Anton Logic - Website initialized');
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
