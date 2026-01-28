@@ -1,5 +1,3 @@
-# anton-logic
-Personal Site - Services
 # Anton Logic
 
 > Professional Software Development & Digital Services Agency Website
