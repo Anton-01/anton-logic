@@ -42,6 +42,10 @@
     <meta name="geo.region" content="MX">
     <meta name="geo.placename" content="México">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/images/favicon/favicon.svg">
+
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +56,7 @@
         rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
 
     <!-- Structured Data / Schema.org -->
     <script type="application/ld+json">
@@ -962,14 +966,25 @@
 
                     <div class="contact-form-wrapper" data-aos="fade-left">
                         <form class="contact-form" id="contact-form">
+                            <!-- Honeypot field for spam protection (hidden from users) -->
+                            <input type="text" name="botcheck" class="honeypot-field" style="display: none !important;"
+                                tabindex="-1" autocomplete="off">
+
+                            <!-- Web3Forms Access Key - Replace with your own key from https://web3forms.com -->
+                            <input type="hidden" name="access_key" value="4aaebafc-a71a-4564-b389-d1d7e6ef853b">
+                            <input type="hidden" name="subject" value="Nuevo mensaje de contacto - Anton Logic">
+                            <input type="hidden" name="from_name" value="Anton Logic Website">
+
                             <div class="form-group">
                                 <label for="name" data-es="Nombre completo" data-en="Full name">Nombre completo</label>
-                                <input type="text" id="name" name="name" required placeholder="Tu nombre">
+                                <input type="text" id="name" name="name" required placeholder="Tu nombre" minlength="2"
+                                    maxlength="100">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                                <input type="email" id="email" name="email" required placeholder="tu@email.com"
+                                    pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}">
                             </div>
 
                             <div class="form-group">
@@ -1173,15 +1188,345 @@
                 <p class="copyright">© 2025 Anton Logic. <span data-es="Todos los derechos reservados."
                         data-en="All rights reserved.">Todos los derechos reservados.</span></p>
                 <div class="footer-legal">
-                    <a href="#" data-es="Política de Privacidad" data-en="Privacy Policy">Política de Privacidad</a>
-                    <a href="#" data-es="Términos de Servicio" data-en="Terms of Service">Términos de Servicio</a>
+                    <a href="#" data-modal="privacy" data-es="Política de Privacidad" data-en="Privacy Policy">Política
+                        de Privacidad</a>
+                    <a href="#" data-modal="terms" data-es="Términos de Servicio" data-en="Terms of Service">Términos de
+                        Servicio</a>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Privacy Policy Modal -->
+    <div class="modal" id="modal-privacy" aria-hidden="true" role="dialog" aria-labelledby="modal-privacy-title">
+        <div class="modal-overlay" data-modal-close></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-privacy-title" class="modal-title" data-es="Política de Privacidad"
+                    data-en="Privacy Policy">Política de Privacidad</h2>
+                <button class="modal-close" data-modal-close aria-label="Cerrar modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Spanish Content -->
+                <div class="modal-content-es" data-lang-content="es">
+                    <p class="modal-date"><strong>Última actualización:</strong> Enero 2025</p>
+
+                    <h3>1. Información que Recopilamos</h3>
+                    <p>En Anton Logic, recopilamos información que usted nos proporciona directamente cuando:</p>
+                    <ul>
+                        <li>Completa nuestro formulario de contacto (nombre, correo electrónico, mensaje)</li>
+                        <li>Se suscribe a nuestro boletín informativo</li>
+                        <li>Solicita información sobre nuestros servicios</li>
+                        <li>Interactúa con nosotros a través de redes sociales</li>
+                    </ul>
+
+                    <h3>2. Uso de la Información</h3>
+                    <p>Utilizamos la información recopilada para:</p>
+                    <ul>
+                        <li>Responder a sus consultas y solicitudes</li>
+                        <li>Proporcionar información sobre nuestros servicios</li>
+                        <li>Mejorar nuestro sitio web y experiencia del usuario</li>
+                        <li>Enviar comunicaciones de marketing (con su consentimiento)</li>
+                        <li>Cumplir con obligaciones legales</li>
+                    </ul>
+
+                    <h3>3. Protección de Datos</h3>
+                    <p>Implementamos medidas de seguridad técnicas y organizativas apropiadas para proteger su
+                        información personal contra el acceso no autorizado, alteración, divulgación o destrucción. Esto
+                        incluye:</p>
+                    <ul>
+                        <li>Cifrado SSL/TLS para todas las transmisiones de datos</li>
+                        <li>Acceso restringido a datos personales solo a personal autorizado</li>
+                        <li>Revisiones periódicas de nuestras prácticas de seguridad</li>
+                    </ul>
+
+                    <h3>4. Cookies y Tecnologías de Seguimiento</h3>
+                    <p>Nuestro sitio web puede utilizar cookies y tecnologías similares para mejorar su experiencia de
+                        navegación. Puede configurar su navegador para rechazar cookies, aunque esto puede afectar
+                        algunas funcionalidades del sitio.</p>
+
+                    <h3>5. Compartir Información</h3>
+                    <p>No vendemos, alquilamos ni compartimos su información personal con terceros para fines de
+                        marketing. Podemos compartir información con:</p>
+                    <ul>
+                        <li>Proveedores de servicios que nos ayudan a operar nuestro negocio</li>
+                        <li>Autoridades legales cuando sea requerido por ley</li>
+                    </ul>
+
+                    <h3>6. Sus Derechos</h3>
+                    <p>Usted tiene derecho a:</p>
+                    <ul>
+                        <li>Acceder a sus datos personales</li>
+                        <li>Rectificar datos inexactos</li>
+                        <li>Solicitar la eliminación de sus datos</li>
+                        <li>Oponerse al procesamiento de sus datos</li>
+                        <li>Solicitar la portabilidad de sus datos</li>
+                    </ul>
+
+                    <h3>7. Retención de Datos</h3>
+                    <p>Conservamos su información personal solo durante el tiempo necesario para cumplir con los fines
+                        para los que fue recopilada, incluyendo requisitos legales, contables o de informes.</p>
+
+                    <h3>8. Contacto</h3>
+                    <p>Para cualquier consulta sobre esta política de privacidad o el manejo de sus datos personales,
+                        contáctenos en:</p>
+                    <p><strong>Email:</strong> contacto@antonlogic.com<br>
+                        <strong>Ubicación:</strong> Ciudad de México, México
+                    </p>
+                </div>
+
+                <!-- English Content -->
+                <div class="modal-content-en" data-lang-content="en" style="display: none;">
+                    <p class="modal-date"><strong>Last updated:</strong> January 2025</p>
+
+                    <h3>1. Information We Collect</h3>
+                    <p>At Anton Logic, we collect information you provide directly to us when you:</p>
+                    <ul>
+                        <li>Complete our contact form (name, email address, message)</li>
+                        <li>Subscribe to our newsletter</li>
+                        <li>Request information about our services</li>
+                        <li>Interact with us through social media</li>
+                    </ul>
+
+                    <h3>2. Use of Information</h3>
+                    <p>We use the collected information to:</p>
+                    <ul>
+                        <li>Respond to your inquiries and requests</li>
+                        <li>Provide information about our services</li>
+                        <li>Improve our website and user experience</li>
+                        <li>Send marketing communications (with your consent)</li>
+                        <li>Comply with legal obligations</li>
+                    </ul>
+
+                    <h3>3. Data Protection</h3>
+                    <p>We implement appropriate technical and organizational security measures to protect your personal
+                        information against unauthorized access, alteration, disclosure, or destruction. This includes:
+                    </p>
+                    <ul>
+                        <li>SSL/TLS encryption for all data transmissions</li>
+                        <li>Restricted access to personal data only to authorized personnel</li>
+                        <li>Periodic reviews of our security practices</li>
+                    </ul>
+
+                    <h3>4. Cookies and Tracking Technologies</h3>
+                    <p>Our website may use cookies and similar technologies to enhance your browsing experience. You can
+                        configure your browser to reject cookies, although this may affect some site functionalities.
+                    </p>
+
+                    <h3>5. Information Sharing</h3>
+                    <p>We do not sell, rent, or share your personal information with third parties for marketing
+                        purposes. We may share information with:</p>
+                    <ul>
+                        <li>Service providers who help us operate our business</li>
+                        <li>Legal authorities when required by law</li>
+                    </ul>
+
+                    <h3>6. Your Rights</h3>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal data</li>
+                        <li>Rectify inaccurate data</li>
+                        <li>Request deletion of your data</li>
+                        <li>Object to data processing</li>
+                        <li>Request data portability</li>
+                    </ul>
+
+                    <h3>7. Data Retention</h3>
+                    <p>We retain your personal information only for as long as necessary to fulfill the purposes for
+                        which it was collected, including legal, accounting, or reporting requirements.</p>
+
+                    <h3>8. Contact</h3>
+                    <p>For any questions about this privacy policy or the handling of your personal data, please contact
+                        us at:</p>
+                    <p><strong>Email:</strong> contacto@antonlogic.com<br>
+                        <strong>Location:</strong> Mexico City, Mexico
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal" id="modal-terms" aria-hidden="true" role="dialog" aria-labelledby="modal-terms-title">
+        <div class="modal-overlay" data-modal-close></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-terms-title" class="modal-title" data-es="Términos de Servicio"
+                    data-en="Terms of Service">Términos de Servicio</h2>
+                <button class="modal-close" data-modal-close aria-label="Cerrar modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Spanish Content -->
+                <div class="modal-content-es" data-lang-content="es">
+                    <p class="modal-date"><strong>Última actualización:</strong> Enero 2025</p>
+
+                    <h3>1. Aceptación de los Términos</h3>
+                    <p>Al acceder y utilizar el sitio web de Anton Logic (antonlogic.com), usted acepta estar sujeto a
+                        estos Términos de Servicio. Si no está de acuerdo con alguna parte de estos términos, no debe
+                        utilizar nuestro sitio web o servicios.</p>
+
+                    <h3>2. Descripción de los Servicios</h3>
+                    <p>Anton Logic ofrece servicios profesionales de desarrollo de software, incluyendo:</p>
+                    <ul>
+                        <li>Desarrollo web (landing pages, e-commerce, sitios corporativos)</li>
+                        <li>Software a medida (sistemas de gestión, CRM, automatización)</li>
+                        <li>Desarrollo de APIs y backend</li>
+                        <li>Consultoría técnica y arquitectura de software</li>
+                        <li>Desarrollo de marca e identidad visual</li>
+                        <li>Publicidad digital especializada</li>
+                    </ul>
+
+                    <h3>3. Uso del Sitio Web</h3>
+                    <p>Al utilizar nuestro sitio web, usted se compromete a:</p>
+                    <ul>
+                        <li>Proporcionar información veraz y actualizada</li>
+                        <li>No utilizar el sitio para fines ilegales o no autorizados</li>
+                        <li>No intentar acceder a áreas restringidas del sitio</li>
+                        <li>No transmitir virus u otro código malicioso</li>
+                        <li>Respetar los derechos de propiedad intelectual</li>
+                    </ul>
+
+                    <h3>4. Propiedad Intelectual</h3>
+                    <p>Todo el contenido del sitio web, incluyendo pero no limitado a textos, gráficos, logotipos,
+                        iconos, imágenes, clips de audio, descargas digitales y compilaciones de datos, es propiedad de
+                        Anton Logic o sus proveedores de contenido y está protegido por las leyes de propiedad
+                        intelectual.</p>
+
+                    <h3>5. Servicios y Cotizaciones</h3>
+                    <ul>
+                        <li>Las cotizaciones proporcionadas son estimaciones y pueden variar según los requisitos
+                            finales del proyecto</li>
+                        <li>Los plazos de entrega se acordarán por escrito una vez aprobada la propuesta</li>
+                        <li>Los cambios de alcance pueden resultar en ajustes de precio y tiempo</li>
+                        <li>El pago se realizará según los términos acordados en el contrato específico</li>
+                    </ul>
+
+                    <h3>6. Confidencialidad</h3>
+                    <p>Nos comprometemos a mantener la confidencialidad de toda la información proporcionada por
+                        nuestros clientes durante el proceso de consulta y desarrollo de proyectos. Esta obligación se
+                        extiende más allá de la terminación de cualquier relación comercial.</p>
+
+                    <h3>7. Limitación de Responsabilidad</h3>
+                    <p>Anton Logic no será responsable por daños indirectos, incidentales, especiales o consecuentes que
+                        resulten del uso o la imposibilidad de usar nuestros servicios o sitio web. Nuestra
+                        responsabilidad máxima estará limitada al monto pagado por los servicios específicos.</p>
+
+                    <h3>8. Garantías</h3>
+                    <p>Proporcionamos una garantía de 30 días después de la entrega del proyecto para corrección de
+                        errores identificados. Las modificaciones fuera del alcance original requerirán un acuerdo
+                        adicional.</p>
+
+                    <h3>9. Terminación</h3>
+                    <p>Cualquiera de las partes puede terminar la relación comercial con previo aviso por escrito. En
+                        caso de terminación, el cliente recibirá todos los entregables completados hasta la fecha de
+                        terminación.</p>
+
+                    <h3>10. Modificaciones</h3>
+                    <p>Nos reservamos el derecho de modificar estos Términos de Servicio en cualquier momento. Las
+                        modificaciones entrarán en vigor inmediatamente después de su publicación en el sitio web.</p>
+
+                    <h3>11. Ley Aplicable</h3>
+                    <p>Estos términos se regirán e interpretarán de acuerdo con las leyes de México. Cualquier disputa
+                        será sometida a la jurisdicción de los tribunales competentes de la Ciudad de México.</p>
+
+                    <h3>12. Contacto</h3>
+                    <p>Para cualquier pregunta sobre estos Términos de Servicio, contáctenos en:</p>
+                    <p><strong>Email:</strong> contacto@antonlogic.com<br>
+                        <strong>Teléfono:</strong> +52 123 456 7890<br>
+                        <strong>Ubicación:</strong> Ciudad de México, México
+                    </p>
+                </div>
+
+                <!-- English Content -->
+                <div class="modal-content-en" data-lang-content="en" style="display: none;">
+                    <p class="modal-date"><strong>Last updated:</strong> January 2025</p>
+
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By accessing and using the Anton Logic website (antonlogic.com), you agree to be bound by these
+                        Terms of Service. If you do not agree with any part of these terms, you should not use our
+                        website or services.</p>
+
+                    <h3>2. Description of Services</h3>
+                    <p>Anton Logic offers professional software development services, including:</p>
+                    <ul>
+                        <li>Web development (landing pages, e-commerce, corporate sites)</li>
+                        <li>Custom software (management systems, CRM, automation)</li>
+                        <li>API and backend development</li>
+                        <li>Technical consulting and software architecture</li>
+                        <li>Brand development and visual identity</li>
+                        <li>Specialized digital advertising</li>
+                    </ul>
+
+                    <h3>3. Website Usage</h3>
+                    <p>When using our website, you agree to:</p>
+                    <ul>
+                        <li>Provide truthful and up-to-date information</li>
+                        <li>Not use the site for illegal or unauthorized purposes</li>
+                        <li>Not attempt to access restricted areas of the site</li>
+                        <li>Not transmit viruses or other malicious code</li>
+                        <li>Respect intellectual property rights</li>
+                    </ul>
+
+                    <h3>4. Intellectual Property</h3>
+                    <p>All website content, including but not limited to texts, graphics, logos, icons, images, audio
+                        clips, digital downloads, and data compilations, is the property of Anton Logic or its content
+                        providers and is protected by intellectual property laws.</p>
+
+                    <h3>5. Services and Quotes</h3>
+                    <ul>
+                        <li>Quotes provided are estimates and may vary according to final project requirements</li>
+                        <li>Delivery timelines will be agreed in writing once the proposal is approved</li>
+                        <li>Scope changes may result in price and time adjustments</li>
+                        <li>Payment will be made according to terms agreed in the specific contract</li>
+                    </ul>
+
+                    <h3>6. Confidentiality</h3>
+                    <p>We are committed to maintaining the confidentiality of all information provided by our clients
+                        during the consultation and project development process. This obligation extends beyond the
+                        termination of any business relationship.</p>
+
+                    <h3>7. Limitation of Liability</h3>
+                    <p>Anton Logic shall not be liable for indirect, incidental, special, or consequential damages
+                        resulting from the use or inability to use our services or website. Our maximum liability shall
+                        be limited to the amount paid for the specific services.</p>
+
+                    <h3>8. Warranties</h3>
+                    <p>We provide a 30-day warranty after project delivery for correction of identified errors.
+                        Modifications outside the original scope will require an additional agreement.</p>
+
+                    <h3>9. Termination</h3>
+                    <p>Either party may terminate the business relationship with prior written notice. In case of
+                        termination, the client will receive all completed deliverables up to the termination date.</p>
+
+                    <h3>10. Modifications</h3>
+                    <p>We reserve the right to modify these Terms of Service at any time. Modifications will take effect
+                        immediately upon publication on the website.</p>
+
+                    <h3>11. Applicable Law</h3>
+                    <p>These terms shall be governed and interpreted in accordance with the laws of Mexico. Any dispute
+                        shall be submitted to the jurisdiction of the competent courts of Mexico City.</p>
+
+                    <h3>12. Contact</h3>
+                    <p>For any questions about these Terms of Service, please contact us at:</p>
+                    <p><strong>Email:</strong> contacto@antonlogic.com<br>
+                        <strong>Phone:</strong> +52 123 456 7890<br>
+                        <strong>Location:</strong> Mexico City, Mexico
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 
 </html>

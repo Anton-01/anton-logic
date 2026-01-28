@@ -312,23 +312,98 @@
     // ==========================================================================
 
     const FormSystem = {
+        // Configuration for the contact form
+        config: {
+            // Web3Forms API endpoint (free, no backend required)
+            apiUrl: 'https://api.web3forms.com/submit',
+            // Rate limiting: minimum seconds between submissions
+            minSubmitInterval: 30,
+            // Last submission timestamp
+            lastSubmitTime: 0
+        },
+
         init() {
             if (DOM.contactForm) {
                 DOM.contactForm.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.setupValidation();
             }
         },
 
-        handleSubmit(e) {
+        setupValidation() {
+            // Real-time email validation
+            const emailInput = DOM.contactForm.querySelector('#email');
+            if (emailInput) {
+                emailInput.addEventListener('blur', () => {
+                    this.validateEmail(emailInput);
+                });
+            }
+
+            // Name validation
+            const nameInput = DOM.contactForm.querySelector('#name');
+            if (nameInput) {
+                nameInput.addEventListener('blur', () => {
+                    this.validateName(nameInput);
+                });
+            }
+        },
+
+        validateEmail(input) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const isValid = emailRegex.test(input.value);
+            this.setFieldValidation(input, isValid);
+            return isValid;
+        },
+
+        validateName(input) {
+            const isValid = input.value.trim().length >= 2;
+            this.setFieldValidation(input, isValid);
+            return isValid;
+        },
+
+        setFieldValidation(input, isValid) {
+            if (input.value.length > 0) {
+                input.style.borderColor = isValid ? 'var(--color-secondary)' : '#EF4444';
+            } else {
+                input.style.borderColor = '';
+            }
+        },
+
+        async handleSubmit(e) {
             e.preventDefault();
 
             const formData = new FormData(DOM.contactForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Show loading state
+            const currentLang = LanguageSystem.currentLang;
             const submitBtn = DOM.contactForm.querySelector('.form-submit');
             const originalText = submitBtn.innerHTML;
-            const currentLang = LanguageSystem.currentLang;
 
+            // Anti-spam check 1: Honeypot field
+            const honeypot = formData.get('botcheck');
+            if (honeypot && honeypot.length > 0) {
+                console.warn('Bot detected via honeypot');
+                return; // Silently fail for bots
+            }
+
+            // Anti-spam check 2: Rate limiting
+            const now = Date.now();
+            if (now - this.config.lastSubmitTime < this.config.minSubmitInterval * 1000) {
+                const waitMessage = currentLang === 'es'
+                    ? 'Por favor espera unos segundos antes de enviar otro mensaje.'
+                    : 'Please wait a few seconds before sending another message.';
+                this.showNotification(waitMessage, 'error');
+                return;
+            }
+
+            // Anti-spam check 3: Basic content validation
+            const message = formData.get('message');
+            if (this.containsSpamPatterns(message)) {
+                const spamMessage = currentLang === 'es'
+                    ? 'Tu mensaje parece contener contenido no permitido.'
+                    : 'Your message appears to contain disallowed content.';
+                this.showNotification(spamMessage, 'error');
+                return;
+            }
+
+            // Show loading state
             submitBtn.innerHTML = `
                 <svg class="spinner" width="20" height="20" viewBox="0 0 20 20">
                     <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50" stroke-linecap="round">
@@ -339,23 +414,81 @@
             `;
             submitBtn.disabled = true;
 
-            // Simulate form submission (replace with actual API call)
-            setTimeout(() => {
-                console.log('Form data:', data);
+            try {
+                // Check if using demo mode (no API key configured)
+                const accessKey = formData.get('access_key');
+                const isDemoMode = !accessKey || accessKey === 'YOUR_ACCESS_KEY_HERE';
 
+                if (isDemoMode) {
+                    // Demo mode - simulate submission
+                    await this.simulateSubmission(formData);
+                } else {
+                    // Production mode - send to Web3Forms
+                    await this.sendToApi(formData);
+                }
+
+                // Update rate limiting timestamp
+                this.config.lastSubmitTime = Date.now();
                 // Success message
                 const successMessage = currentLang === 'es'
                     ? '¡Mensaje enviado con éxito! Te contactaremos pronto.'
                     : 'Message sent successfully! We\'ll contact you soon.';
 
-                this.showNotification(successMessage, 'success');
-
-                // Reset form
+                this.showNotification(successMessage, 'success')
                 DOM.contactForm.reset();
+            } catch (error) {
+                console.error('Form submission error:', error);
+                const errorMessage = currentLang === 'es'
+                    ? 'Error al enviar el mensaje. Por favor intenta de nuevo.'
+                    : 'Error sending message. Please try again.';
+                this.showNotification(errorMessage, 'error');
+            } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
+            }
+        },
 
-            }, 2000);
+        async simulateSubmission(formData) {
+            // Simulate network delay for demo purposes
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('📧 Form data (Demo Mode):', Object.fromEntries(formData.entries()));
+                    console.log('ℹ️ To enable real email delivery:');
+                    console.log('   1. Get a free API key from https://web3forms.com');
+                    console.log('   2. Replace "YOUR_ACCESS_KEY_HERE" in index.html');
+                    resolve();
+                }, 1500);
+            });
+        },
+
+        async sendToApi(formData) {
+            const response = await fetch(this.config.apiUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message || 'Submission failed');
+            }
+            return result;
+        },
+        containsSpamPatterns(text) {
+            if (!text) return false;
+
+            // Common spam patterns
+            const spamPatterns = [
+                /\[url=/i,
+                /\[link=/i,
+                /<a\s+href/i,
+                /viagra|cialis|casino|poker|lottery/i,
+                /click here.*free/i,
+                /earn.*\$\d+.*day/i,
+                /http[s]?:\/\/.*http[s]?:\/\//i, // Multiple URLs
+            ];
+
+            return spamPatterns.some(pattern => pattern.test(text));
         },
 
         showNotification(message, type = 'success') {
@@ -616,6 +749,111 @@
         }
     };
 
+
+    // ==========================================================================
+    // Modal System
+    // ==========================================================================
+
+    const ModalSystem = {
+        init() {
+            this.bindModalTriggers();
+            this.bindCloseEvents();
+            this.updateModalLanguage();
+        },
+
+        bindModalTriggers() {
+            document.querySelectorAll('[data-modal]').forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const modalId = trigger.getAttribute('data-modal');
+                    this.openModal(`modal-${modalId}`);
+                });
+            });
+        },
+
+        bindCloseEvents() {
+            // Close on overlay click or close button
+            document.querySelectorAll('[data-modal-close]').forEach(closer => {
+                closer.addEventListener('click', () => {
+                    const modal = closer.closest('.modal');
+                    if (modal) {
+                        this.closeModal(modal.id);
+                    }
+                });
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const activeModal = document.querySelector('.modal.active');
+                    if (activeModal) {
+                        this.closeModal(activeModal.id);
+                    }
+                }
+            });
+        },
+
+        openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('modal-open');
+
+                // Update content language
+                this.updateModalContentLanguage(modal);
+
+                // Focus management
+                const closeBtn = modal.querySelector('.modal-close');
+                if (closeBtn) {
+                    closeBtn.focus();
+                }
+            }
+        },
+
+        closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+
+                // Return focus to trigger
+                const trigger = document.querySelector(`[data-modal="${modalId.replace('modal-', '')}"]`);
+                if (trigger) {
+                    trigger.focus();
+                }
+            }
+        },
+
+        updateModalLanguage() {
+            // Listen for language changes
+            const originalSetLanguage = LanguageSystem.setLanguage.bind(LanguageSystem);
+            LanguageSystem.setLanguage = (lang) => {
+                originalSetLanguage(lang);
+                document.querySelectorAll('.modal').forEach(modal => {
+                    this.updateModalContentLanguage(modal);
+                });
+            };
+        },
+
+        updateModalContentLanguage(modal) {
+            const currentLang = LanguageSystem.currentLang;
+            const esContent = modal.querySelector('[data-lang-content="es"]');
+            const enContent = modal.querySelector('[data-lang-content="en"]');
+
+            if (esContent && enContent) {
+                if (currentLang === 'es') {
+                    esContent.style.display = 'block';
+                    enContent.style.display = 'none';
+                } else {
+                    esContent.style.display = 'none';
+                    enContent.style.display = 'block';
+                }
+            }
+        }
+    };
+
     // ==========================================================================
     // Accessibility Improvements
     // ==========================================================================
@@ -672,6 +910,7 @@
         AnimationSystem.init();
         CounterSystem.init();
         FormSystem.init();
+        ModalSystem.init();
         CursorSystem.init();
         ParallaxSystem.init();
         TypingSystem.init();
