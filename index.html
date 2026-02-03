@@ -147,41 +147,81 @@
                 <span class="logo-text">Anton</span><span class="logo-accent">Logic</span>
             </a>
 
-            <ul class="nav-menu" id="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link" data-es="Inicio" data-en="Home">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a href="services.html" class="nav-link" data-es="Servicios" data-en="Services">Servicios</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#about" class="nav-link" data-es="Nosotros" data-en="About">Nosotros</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#portfolio" class="nav-link" data-es="Proyectos" data-en="Projects">Proyectos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#process" class="nav-link" data-es="Proceso" data-en="Process">Proceso</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link" data-es="Contacto" data-en="Contact">Contacto</a>
-                </li>
-            </ul>
+            <div class="nav-menu" id="nav-menu">
+                <!-- SVG Background decorativo -->
+                <svg class="nav-menu-bg" viewBox="0 0 400 800" fill="none" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <linearGradient id="menuGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0055FF" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#00D4AA" stop-opacity="0.05"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="100" r="150" fill="url(#menuGrad1)"/>
+                    <circle cx="350" cy="600" r="200" fill="url(#menuGrad1)"/>
+                    <circle cx="200" cy="400" r="80" fill="#0055FF" opacity="0.08"/>
+                    <path d="M0 200 Q 100 250 200 200 T 400 200" stroke="#0055FF" stroke-width="1" opacity="0.1" fill="none"/>
+                    <path d="M0 400 Q 100 450 200 400 T 400 400" stroke="#00D4AA" stroke-width="1" opacity="0.1" fill="none"/>
+                    <path d="M0 600 Q 100 650 200 600 T 400 600" stroke="#0055FF" stroke-width="1" opacity="0.1" fill="none"/>
+                </svg>
+
+                <!-- Botón cerrar -->
+                <button class="nav-menu-close" id="nav-menu-close" aria-label="Cerrar menú">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <!-- Logo en el menú -->
+                <a href="#home" class="nav-menu-logo">
+                    <span class="logo-text">Anton</span><span class="logo-accent">Logic</span>
+                </a>
+
+                <ul class="nav-menu-list">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link" data-es="Inicio" data-en="Home">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="services.html" class="nav-link" data-es="Servicios" data-en="Services">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link" data-es="Nosotros" data-en="About">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#portfolio" class="nav-link" data-es="Proyectos" data-en="Projects">Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#process" class="nav-link" data-es="Proceso" data-en="Process">Proceso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link" data-es="Contacto" data-en="Contact">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- CTA en el menú móvil -->
+                <a href="#contact" class="btn btn-primary nav-menu-cta" data-es="Iniciar proyecto" data-en="Start project">Iniciar proyecto</a>
+            </div>
 
             <div class="nav-actions">
                 <div class="lang-dropdown" id="lang-dropdown">
                     <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma" aria-expanded="false">
                         <span class="lang-flag" id="lang-flag">
+                            <!-- Bandera de México -->
                             <svg width="20" height="14" viewBox="0 0 20 14" class="flag-es">
-                                <rect width="20" height="14" rx="1" fill="#C60B1E"/>
-                                <rect y="3.5" width="20" height="7" fill="#FFC400"/>
+                                <rect width="6.67" height="14" fill="#006847"/>
+                                <rect x="6.67" width="6.67" height="14" fill="#FFFFFF"/>
+                                <rect x="13.33" width="6.67" height="14" fill="#CE1126"/>
+                                <ellipse cx="10" cy="7" rx="1.8" ry="1.5" fill="#6D3E1A"/>
                             </svg>
+                            <!-- Bandera de USA -->
                             <svg width="20" height="14" viewBox="0 0 20 14" class="flag-en" style="display: none;">
-                                <rect width="20" height="14" rx="1" fill="#012169"/>
-                                <path d="M0 0L20 14M20 0L0 14" stroke="white" stroke-width="2"/>
-                                <path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1"/>
-                                <path d="M10 0V14M0 7H20" stroke="white" stroke-width="4"/>
-                                <path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2"/>
+                                <rect width="20" height="14" fill="#B22234"/>
+                                <rect y="1.08" width="20" height="1.08" fill="white"/>
+                                <rect y="3.23" width="20" height="1.08" fill="white"/>
+                                <rect y="5.38" width="20" height="1.08" fill="white"/>
+                                <rect y="7.54" width="20" height="1.08" fill="white"/>
+                                <rect y="9.69" width="20" height="1.08" fill="white"/>
+                                <rect y="11.85" width="20" height="1.08" fill="white"/>
+                                <rect width="8" height="7.54" fill="#3C3B6E"/>
                             </svg>
                         </span>
                         <span class="lang-current">ES</span>
@@ -192,20 +232,25 @@
                     <div class="lang-menu" id="lang-menu">
                         <button class="lang-option" data-lang="es">
                             <svg width="20" height="14" viewBox="0 0 20 14">
-                                <rect width="20" height="14" rx="1" fill="#C60B1E"/>
-                                <rect y="3.5" width="20" height="7" fill="#FFC400"/>
+                                <rect width="6.67" height="14" fill="#006847"/>
+                                <rect x="6.67" width="6.67" height="14" fill="#FFFFFF"/>
+                                <rect x="13.33" width="6.67" height="14" fill="#CE1126"/>
+                                <ellipse cx="10" cy="7" rx="1.8" ry="1.5" fill="#6D3E1A"/>
                             </svg>
-                            <span>Español</span>
+                            <span>Español (MX)</span>
                         </button>
                         <button class="lang-option" data-lang="en">
                             <svg width="20" height="14" viewBox="0 0 20 14">
-                                <rect width="20" height="14" rx="1" fill="#012169"/>
-                                <path d="M0 0L20 14M20 0L0 14" stroke="white" stroke-width="2"/>
-                                <path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1"/>
-                                <path d="M10 0V14M0 7H20" stroke="white" stroke-width="4"/>
-                                <path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2"/>
+                                <rect width="20" height="14" fill="#B22234"/>
+                                <rect y="1.08" width="20" height="1.08" fill="white"/>
+                                <rect y="3.23" width="20" height="1.08" fill="white"/>
+                                <rect y="5.38" width="20" height="1.08" fill="white"/>
+                                <rect y="7.54" width="20" height="1.08" fill="white"/>
+                                <rect y="9.69" width="20" height="1.08" fill="white"/>
+                                <rect y="11.85" width="20" height="1.08" fill="white"/>
+                                <rect width="8" height="7.54" fill="#3C3B6E"/>
                             </svg>
-                            <span>English</span>
+                            <span>English (US)</span>
                         </button>
                     </div>
                 </div>
@@ -1164,10 +1209,10 @@
                                 <select id="budget" name="budget">
                                     <option value="" data-es="Selecciona un rango" data-en="Select a range">Selecciona
                                         un rango</option>
-                                    <option value="small">$1,000 - $5,000 USD</option>
-                                    <option value="medium">$5,000 - $15,000 USD</option>
-                                    <option value="large">$15,000 - $50,000 USD</option>
-                                    <option value="enterprise">$50,000+ USD</option>
+                                    <option value="small" data-es="$20,000 - $100,000 MXN" data-en="$1,000 - $5,000 USD">$20,000 - $100,000 MXN</option>
+                                    <option value="medium" data-es="$100,000 - $300,000 MXN" data-en="$5,000 - $15,000 USD">$100,000 - $300,000 MXN</option>
+                                    <option value="large" data-es="$300,000 - $1,000,000 MXN" data-en="$15,000 - $50,000 USD">$300,000 - $1,000,000 MXN</option>
+                                    <option value="enterprise" data-es="$1,000,000+ MXN" data-en="$50,000+ USD">$1,000,000+ MXN</option>
                                 </select>
                             </div>
 

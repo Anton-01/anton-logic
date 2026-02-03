@@ -210,22 +210,44 @@
         },
 
         bindMobileMenu() {
+            const navMenuClose = document.getElementById('nav-menu-close');
+
             if (DOM.navToggle && DOM.navMenu) {
+                // Open menu
                 DOM.navToggle.addEventListener('click', () => {
                     DOM.navToggle.classList.toggle('active');
                     DOM.navMenu.classList.toggle('active');
                     document.body.classList.toggle('no-scroll');
                 });
 
+                // Close button
+                if (navMenuClose) {
+                    navMenuClose.addEventListener('click', () => {
+                        this.closeMobileMenu();
+                    });
+                }
+
                 // Close menu when clicking a link
                 DOM.navMenu.querySelectorAll('.nav-link').forEach(link => {
                     link.addEventListener('click', () => {
-                        DOM.navToggle.classList.remove('active');
-                        DOM.navMenu.classList.remove('active');
-                        document.body.classList.remove('no-scroll');
+                        this.closeMobileMenu();
                     });
                 });
+
+                // Close menu when clicking CTA
+                const menuCta = DOM.navMenu.querySelector('.nav-menu-cta');
+                if (menuCta) {
+                    menuCta.addEventListener('click', () => {
+                        this.closeMobileMenu();
+                    });
+                }
             }
+        },
+
+        closeMobileMenu() {
+            DOM.navToggle?.classList.remove('active');
+            DOM.navMenu?.classList.remove('active');
+            document.body.classList.remove('no-scroll');
         },
 
         bindSmoothScroll() {
