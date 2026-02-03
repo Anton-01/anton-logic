@@ -16,13 +16,16 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://antonlogic.com/">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://antonlogic.com/">
     <meta property="og:title" content="Anton Logic | Desarrollo de Software & Diseño Web Profesional">
     <meta property="og:description"
         content="Transformamos tus ideas en soluciones digitales. Desarrollo web, software a medida, APIs y consultoría técnica.">
-    <meta property="og:image" content="https://antonlogic.com/assets/images/og-image.svg">
+    <meta property="og:image" content="https://antonlogic.com/assets/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:locale" content="es_ES">
     <meta property="og:locale:alternate" content="en_US">
     <meta property="og:site_name" content="Anton Logic">
@@ -33,7 +36,7 @@
     <meta name="twitter:title" content="Anton Logic | Desarrollo de Software & Diseño Web">
     <meta name="twitter:description"
         content="Transformamos tus ideas en soluciones digitales. Desarrollo web, software a medida y consultoría técnica.">
-    <meta name="twitter:image" content="https://antonlogic.com/assets/images/twitter-card.svg">
+    <meta name="twitter:image" content="https://antonlogic.com/assets/images/og-image.png">
     <meta name="twitter:creator" content="@antonlogic">
 
     <!-- Additional SEO -->
@@ -67,7 +70,7 @@
         "description": "Desarrollo de software a medida, modernización de sistemas legacy, páginas web profesionales, APIs, consultoría técnica y desarrollo de marca.",
         "url": "https://antonlogic.com",
         "logo": "https://antonlogic.com/assets/logo.png",
-        "image": "https://antonlogic.com/assets/images/og-image.svg",
+        "image": "https://antonlogic.com/assets/images/og-image.png",
         "telephone": "+524435288990",
         "email": "contacto@antonlogic.com",
         "address": {
@@ -166,12 +169,46 @@
             </ul>
 
             <div class="nav-actions">
-                <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma">
-                    <span class="lang-current">ES</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    </svg>
-                </button>
+                <div class="lang-dropdown" id="lang-dropdown">
+                    <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma" aria-expanded="false">
+                        <span class="lang-flag" id="lang-flag">
+                            <svg width="20" height="14" viewBox="0 0 20 14" class="flag-es">
+                                <rect width="20" height="14" rx="1" fill="#C60B1E"/>
+                                <rect y="3.5" width="20" height="7" fill="#FFC400"/>
+                            </svg>
+                            <svg width="20" height="14" viewBox="0 0 20 14" class="flag-en" style="display: none;">
+                                <rect width="20" height="14" rx="1" fill="#012169"/>
+                                <path d="M0 0L20 14M20 0L0 14" stroke="white" stroke-width="2"/>
+                                <path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1"/>
+                                <path d="M10 0V14M0 7H20" stroke="white" stroke-width="4"/>
+                                <path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2"/>
+                            </svg>
+                        </span>
+                        <span class="lang-current">ES</span>
+                        <svg class="lang-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                    <div class="lang-menu" id="lang-menu">
+                        <button class="lang-option" data-lang="es">
+                            <svg width="20" height="14" viewBox="0 0 20 14">
+                                <rect width="20" height="14" rx="1" fill="#C60B1E"/>
+                                <rect y="3.5" width="20" height="7" fill="#FFC400"/>
+                            </svg>
+                            <span>Español</span>
+                        </button>
+                        <button class="lang-option" data-lang="en">
+                            <svg width="20" height="14" viewBox="0 0 20 14">
+                                <rect width="20" height="14" rx="1" fill="#012169"/>
+                                <path d="M0 0L20 14M20 0L0 14" stroke="white" stroke-width="2"/>
+                                <path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1"/>
+                                <path d="M10 0V14M0 7H20" stroke="white" stroke-width="4"/>
+                                <path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2"/>
+                            </svg>
+                            <span>English</span>
+                        </button>
+                    </div>
+                </div>
                 <a href="#contact" class="btn btn-primary nav-cta" data-es="Hablemos" data-en="Let's Talk">Hablemos</a>
                 <button class="nav-toggle" id="nav-toggle" aria-label="Menú">
                     <span></span>
@@ -1088,13 +1125,14 @@
 
                             <div class="form-group">
                                 <label for="name" data-es="Nombre completo" data-en="Full name">Nombre completo</label>
-                                <input type="text" id="name" name="name" required placeholder="Tu nombre" minlength="2"
-                                    maxlength="100">
+                                <input type="text" id="name" name="name" required placeholder="Tu nombre"
+                                    data-es="Tu nombre" data-en="Your name" minlength="2" maxlength="100">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" name="email" required placeholder="tu@email.com"
+                                    data-es="tu@email.com" data-en="your@email.com"
                                     pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}">
                             </div>
 
@@ -1137,7 +1175,9 @@
                                 <label for="message" data-es="Cuéntanos sobre tu proyecto"
                                     data-en="Tell us about your project">Cuéntanos sobre tu proyecto</label>
                                 <textarea id="message" name="message" rows="4" required
-                                    placeholder="Describe brevemente tu idea o necesidad..."></textarea>
+                                    placeholder="Describe brevemente tu idea o necesidad..."
+                                    data-es="Describe brevemente tu idea o necesidad..."
+                                    data-en="Briefly describe your idea or need..."></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-lg form-submit">

@@ -457,10 +457,15 @@ h6 {
     gap: var(--space-md);
 }
 
+/* Language Dropdown */
+.lang-dropdown {
+    position: relative;
+}
+
 .lang-toggle {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: var(--space-sm);
     padding: var(--space-sm) var(--space-md);
     font-family: var(--font-primary);
     font-size: 0.875rem;
@@ -473,6 +478,74 @@ h6 {
 
 .lang-toggle:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.lang-flag {
+    display: flex;
+    align-items: center;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.lang-flag svg {
+    display: block;
+}
+
+.lang-arrow {
+    transition: transform var(--transition-fast);
+}
+
+.lang-dropdown.active .lang-arrow {
+    transform: rotate(180deg);
+}
+
+.lang-menu {
+    position: absolute;
+    top: calc(100% + var(--space-sm));
+    right: 0;
+    min-width: 140px;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-fast);
+    z-index: var(--z-dropdown);
+    overflow: hidden;
+}
+
+.lang-dropdown.active .lang-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.lang-option:hover {
+    background: var(--color-gray-100);
+    color: var(--color-primary);
+}
+
+.lang-option svg {
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .header.scrolled .lang-toggle {
@@ -534,6 +607,7 @@ h6 {
 /* Mobile Menu */
 @media (max-width: 1023px) {
     .nav-menu {
+        display: flex;
         position: fixed;
         top: 0;
         right: -100%;
@@ -547,6 +621,7 @@ h6 {
         padding: var(--space-3xl);
         gap: var(--space-lg);
         transition: right var(--transition-slow);
+        z-index: var(--z-modal);
     }
 
     .nav-menu.active {
