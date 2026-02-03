@@ -167,4 +167,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with passion by **Anton Logic** | Ciudad de Mexico, MX
+Built with passion by **Anton Logic** | Ciudad de Morelia, Michoacán, MX
