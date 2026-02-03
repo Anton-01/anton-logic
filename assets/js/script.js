@@ -27,6 +27,9 @@
         navMenu: document.getElementById('nav-menu'),
         navToggle: document.getElementById('nav-toggle'),
         langToggle: document.getElementById('lang-toggle'),
+        langDropdown: document.getElementById('lang-dropdown'),
+        langMenu: document.getElementById('lang-menu'),
+        langFlag: document.getElementById('lang-flag'),
         contactForm: document.getElementById('contact-form'),
         html: document.documentElement
     };
@@ -56,18 +59,53 @@
             // Apply initial language
             this.setLanguage(this.currentLang);
 
-            // Bind toggle event
-            if (DOM.langToggle) {
-                DOM.langToggle.addEventListener('click', () => this.toggleLanguage());
+            // Bind dropdown toggle event
+            if (DOM.langToggle && DOM.langDropdown) {
+                DOM.langToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleDropdown();
+                });
+
+                // Bind language option events
+                document.querySelectorAll('.lang-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const lang = option.getAttribute('data-lang');
+                        this.setLanguage(lang);
+                        this.closeDropdown();
+                    });
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!DOM.langDropdown.contains(e.target)) {
+                        this.closeDropdown();
+                    }
+                });
+
+                // Close dropdown on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeDropdown();
+                    }
+                });
             }
         },
 
-        toggleLanguage() {
-            this.currentLang = this.currentLang === 'es' ? 'en' : 'es';
-            this.setLanguage(this.currentLang);
+        toggleDropdown() {
+            DOM.langDropdown.classList.toggle('active');
+            const isOpen = DOM.langDropdown.classList.contains('active');
+            DOM.langToggle.setAttribute('aria-expanded', isOpen);
+        },
+
+        closeDropdown() {
+            DOM.langDropdown.classList.remove('active');
+            DOM.langToggle.setAttribute('aria-expanded', 'false');
         },
 
         setLanguage(lang) {
+            this.currentLang = lang;
+
             // Update HTML lang attribute
             DOM.html.setAttribute('lang', lang);
             DOM.html.setAttribute('data-lang', lang);
@@ -76,6 +114,16 @@
             const langDisplay = DOM.langToggle?.querySelector('.lang-current');
             if (langDisplay) {
                 langDisplay.textContent = lang.toUpperCase();
+            }
+
+            // Update flag display
+            if (DOM.langFlag) {
+                const flagEs = DOM.langFlag.querySelector('.flag-es');
+                const flagEn = DOM.langFlag.querySelector('.flag-en');
+                if (flagEs && flagEn) {
+                    flagEs.style.display = lang === 'es' ? 'block' : 'none';
+                    flagEn.style.display = lang === 'en' ? 'block' : 'none';
+                }
             }
 
             // Update all translatable elements
@@ -162,22 +210,44 @@
         },
 
         bindMobileMenu() {
+            const navMenuClose = document.getElementById('nav-menu-close');
+
             if (DOM.navToggle && DOM.navMenu) {
+                // Open menu
                 DOM.navToggle.addEventListener('click', () => {
                     DOM.navToggle.classList.toggle('active');
                     DOM.navMenu.classList.toggle('active');
                     document.body.classList.toggle('no-scroll');
                 });
 
+                // Close button
+                if (navMenuClose) {
+                    navMenuClose.addEventListener('click', () => {
+                        this.closeMobileMenu();
+                    });
+                }
+
                 // Close menu when clicking a link
                 DOM.navMenu.querySelectorAll('.nav-link').forEach(link => {
                     link.addEventListener('click', () => {
-                        DOM.navToggle.classList.remove('active');
-                        DOM.navMenu.classList.remove('active');
-                        document.body.classList.remove('no-scroll');
+                        this.closeMobileMenu();
                     });
                 });
+
+                // Close menu when clicking CTA
+                const menuCta = DOM.navMenu.querySelector('.nav-menu-cta');
+                if (menuCta) {
+                    menuCta.addEventListener('click', () => {
+                        this.closeMobileMenu();
+                    });
+                }
             }
+        },
+
+        closeMobileMenu() {
+            DOM.navToggle?.classList.remove('active');
+            DOM.navMenu?.classList.remove('active');
+            document.body.classList.remove('no-scroll');
         },
 
         bindSmoothScroll() {
