@@ -742,11 +742,40 @@ h6 {
 
     /* CTA en el menú móvil */
     .nav-menu-cta {
-        margin-top: auto;
+        margin-top: var(--space-lg);
         width: 100%;
         justify-content: center;
         position: relative;
         z-index: 1;
+    }
+
+    /* Social links in mobile menu */
+    .nav-menu-social {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        margin-top: auto;
+        padding-top: var(--space-lg);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .nav-menu-social .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        transition: all var(--transition-fast);
+    }
+
+    .nav-menu-social .social-link:hover {
+        background: var(--color-primary);
+        color: var(--color-white);
     }
 }
 
@@ -755,7 +784,8 @@ h6 {
     .nav-menu-bg,
     .nav-menu-close,
     .nav-menu-logo,
-    .nav-menu-cta {
+    .nav-menu-cta,
+    .nav-menu-social {
         display: none;
     }
 
@@ -763,7 +793,7 @@ h6 {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: var(--space-sm);
+        gap: var(--space-lg);
     }
 }
 

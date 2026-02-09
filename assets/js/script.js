@@ -42,18 +42,10 @@
         currentLang: 'es',
 
         init() {
-            // Check for saved language preference
+            // Check for saved language preference, default is always Spanish
             const savedLang = localStorage.getItem('antonlogic-lang');
             if (savedLang) {
                 this.currentLang = savedLang;
-            }
-
-            // Check browser language
-            if (!savedLang) {
-                const browserLang = navigator.language.substring(0, 2);
-                if (browserLang === 'en') {
-                    this.currentLang = 'en';
-                }
             }
 
             // Apply initial language
@@ -389,7 +381,9 @@
             // Rate limiting: minimum seconds between submissions
             minSubmitInterval: 30,
             // Last submission timestamp
-            lastSubmitTime: 0
+            lastSubmitTime: 0,
+            // reCAPTCHA v3 site key - Replace with your own key from https://www.google.com/recaptcha/admin
+            recaptchaSiteKey: '6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         },
 
         init() {
@@ -485,6 +479,17 @@
             submitBtn.disabled = true;
 
             try {
+                // reCAPTCHA v3: Generate token before submission
+                if (typeof grecaptcha !== 'undefined' && this.config.recaptchaSiteKey && !this.config.recaptchaSiteKey.includes('XXXX')) {
+                    try {
+                        const token = await grecaptcha.execute(this.config.recaptchaSiteKey, { action: 'contact_form' });
+                        const tokenField = document.getElementById('recaptcha-token');
+                        if (tokenField) tokenField.value = token;
+                        formData.set('recaptcha_token', token);
+                    } catch (recaptchaError) {
+                        console.warn('reCAPTCHA token generation failed:', recaptchaError);
+                    }
+                }
                 // Check if using demo mode (no API key configured)
                 const accessKey = formData.get('access_key');
                 const isDemoMode = !accessKey || accessKey === 'YOUR_ACCESS_KEY_HERE';
@@ -970,10 +975,43 @@
     };
 
     // ==========================================================================
+    // URL Clean System (Remove .html extension)
+    // ==========================================================================
+
+    const URLCleanSystem = {
+        init() {
+            // Remove .html from current URL without reload
+            if (window.location.pathname.endsWith('.html')) {
+                const cleanPath = window.location.pathname.replace(/\.html$/, '');
+                window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+            }
+
+            // Intercept clicks on internal links to remove .html
+            document.addEventListener('click', (e) => {
+                const link = e.target.closest('a[href]');
+                if (!link) return;
+
+                const href = link.getAttribute('href');
+                if (href && href.endsWith('.html') && !href.startsWith('http') && !href.startsWith('//')) {
+                    e.preventDefault();
+                    const cleanHref = href.replace(/\.html$/, '');
+                    window.location.href = cleanHref;
+                }
+            });
+
+            // Fix form resubmission alert: replace POST state with GET
+            if (window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.href);
+            }
+        }
+    };
+
+    // ==========================================================================
     // Initialize Everything
     // ==========================================================================
 
     function init() {
+        URLCleanSystem.init();
         PreloaderSystem.init();
         LanguageSystem.init();
         NavigationSystem.init();
