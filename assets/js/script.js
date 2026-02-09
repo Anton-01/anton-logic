@@ -132,6 +132,12 @@
                 }
             });
 
+            // Update large content blocks (e.g., privacy policy, terms)
+            document.querySelectorAll('[data-lang-content]').forEach(block => {
+                const blockLang = block.getAttribute('data-lang-content');
+                block.style.display = blockLang === lang ? 'block' : 'none';
+            });
+
             // Update meta tags for SEO
             this.updateMetaTags(lang);
 
@@ -791,27 +797,8 @@
         },
 
         lazyLoadImages() {
-            if ('loading' in HTMLImageElement.prototype) {
-                // Browser supports native lazy loading
-                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                    img.src = img.dataset.src;
-                });
-            } else {
-                // Fallback for older browsers
-                const imageObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.src = img.dataset.src;
-                            imageObserver.unobserve(img);
-                        }
-                    });
-                });
-
-                document.querySelectorAll('img[data-src]').forEach(img => {
-                    imageObserver.observe(img);
-                });
-            }
+            // Native lazy loading is already handled by the browser via loading="lazy" attribute in HTML.
+            // No manual intervention needed as it was causing issues with undefined src.
         },
 
         deferOperations() {
@@ -985,19 +972,6 @@
                 const cleanPath = window.location.pathname.replace(/\.html$/, '');
                 window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
             }
-
-            // Intercept clicks on internal links to remove .html
-            document.addEventListener('click', (e) => {
-                const link = e.target.closest('a[href]');
-                if (!link) return;
-
-                const href = link.getAttribute('href');
-                if (href && href.endsWith('.html') && !href.startsWith('http') && !href.startsWith('//')) {
-                    e.preventDefault();
-                    const cleanHref = href.replace(/\.html$/, '');
-                    window.location.href = cleanHref;
-                }
-            });
 
             // Fix form resubmission alert: replace POST state with GET
             if (window.history.replaceState) {
