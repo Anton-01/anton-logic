@@ -3615,3 +3615,137 @@ body.modal-open {
         margin: 0 auto;
     }
 }
+
+/* ======================================
+   Skeleton Loader
+   ====================================== */
+
+.skeleton-loader {
+    background: linear-gradient(90deg,
+        var(--color-gray-100) 0%,
+        var(--color-gray-200) 50%,
+        var(--color-gray-100) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-2xl);
+}
+
+.skeleton-form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.skeleton-label {
+    height: 16px;
+    width: 120px;
+    margin-bottom: var(--space-sm);
+}
+
+.skeleton-input {
+    height: 48px;
+    width: 100%;
+}
+
+.skeleton-textarea {
+    height: 120px;
+    width: 100%;
+}
+
+.skeleton-button {
+    height: 48px;
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+/* Error State for Connection Failure */
+.connection-error {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-xl);
+    border: 2px dashed var(--color-gray-300);
+}
+
+.connection-error-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-lg);
+    background: var(--color-gray-200);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gray-500);
+}
+
+.connection-error-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: var(--space-sm);
+}
+
+.connection-error-message {
+    color: var(--color-gray-600);
+    margin-bottom: var(--space-lg);
+}
+
+.connection-error-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Skeleton for Service Cards */
+.skeleton-service-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+}
+
+.skeleton-service-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--space-lg);
+}
+
+.skeleton-service-title {
+    height: 24px;
+    width: 70%;
+    margin-bottom: var(--space-md);
+}
+
+.skeleton-service-description {
+    height: 16px;
+    width: 100%;
+    margin-bottom: var(--space-sm);
+}
+
+.skeleton-service-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.skeleton-service-feature {
+    height: 14px;
+    width: 80%;
+}

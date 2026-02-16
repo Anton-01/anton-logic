@@ -389,7 +389,7 @@
             // Last submission timestamp
             lastSubmitTime: 0,
             // reCAPTCHA v3 site key - Replace with your own key from https://www.google.com/recaptcha/admin
-            recaptchaSiteKey: '6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            recaptchaSiteKey: '6Lf3B2YsAAAAAG6iTmz2MT7wQOwx22R-tk-CGHln'
         },
 
         init() {
@@ -981,6 +981,119 @@
     };
 
     // ==========================================================================
+    // Skeleton Loader System
+    // ==========================================================================
+
+    const SkeletonLoaderSystem = {
+        init() {
+            // Check for connection errors on page load
+            this.checkConnectionOnLoad();
+
+            // Monitor form submissions for errors
+            this.monitorFormSubmissions();
+        },
+
+        checkConnectionOnLoad() {
+            // This would check if critical resources failed to load
+            window.addEventListener('error', (e) => {
+                if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
+                    console.warn('Resource failed to load:', e.target.src || e.target.href);
+                    // Could show a connection error message here
+                }
+            }, true);
+        },
+
+        monitorFormSubmissions() {
+            // Override the sendToApi method to handle connection errors
+            const originalSendToApi = FormSystem.sendToApi;
+            FormSystem.sendToApi = async function(formData) {
+                try {
+                    return await originalSendToApi.call(this, formData);
+                } catch (error) {
+                    if (!navigator.onLine || error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+                        SkeletonLoaderSystem.showConnectionError();
+                    }
+                    throw error;
+                }
+            };
+        },
+
+        showSkeleton(container) {
+            const skeletonHTML = `
+                <div class="skeleton-contact-form">
+                    <div class="skeleton-form-group">
+                        <div class="skeleton-loader skeleton-label"></div>
+                        <div class="skeleton-loader skeleton-input"></div>
+                    </div>
+                    <div class="skeleton-form-group">
+                        <div class="skeleton-loader skeleton-label"></div>
+                        <div class="skeleton-loader skeleton-input"></div>
+                    </div>
+                    <div class="skeleton-form-group">
+                        <div class="skeleton-loader skeleton-label"></div>
+                        <div class="skeleton-loader skeleton-textarea"></div>
+                    </div>
+                    <div class="skeleton-loader skeleton-button"></div>
+                </div>
+            `;
+            container.innerHTML = skeletonHTML;
+        },
+
+        showConnectionError() {
+            const contactSection = document.querySelector('#contact');
+            if (!contactSection) return;
+
+            const currentLang = LanguageSystem.currentLang;
+            const errorHTML = `
+                <div class="connection-error">
+                    <div class="connection-error-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="connection-error-title" data-es="Error de conexión" data-en="Connection Error">
+                        ${currentLang === 'es' ? 'Error de conexión' : 'Connection Error'}
+                    </h3>
+                    <p class="connection-error-message" data-es="No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente."
+                        data-en="Could not connect to the server. Please check your internet connection and try again.">
+                        ${currentLang === 'es'
+                            ? 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.'
+                            : 'Could not connect to the server. Please check your internet connection and try again.'}
+                    </p>
+                    <div class="connection-error-actions">
+                        <button onclick="location.reload()" class="btn btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 4px;">
+                                <path d="M14 8a6 6 0 11-12 0 6 6 0 0112 0z" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M8 4v4l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <span data-es="Reintentar" data-en="Retry">
+                                ${currentLang === 'es' ? 'Reintentar' : 'Retry'}
+                            </span>
+                        </button>
+                        <a href="mailto:contacto@antonlogic.com" class="btn btn-outline">
+                            <span data-es="Enviar email directo" data-en="Send direct email">
+                                ${currentLang === 'es' ? 'Enviar email directo' : 'Send direct email'}
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            const formContainer = contactSection.querySelector('.contact-form-wrapper');
+            if (formContainer) {
+                formContainer.innerHTML = errorHTML;
+            }
+        },
+
+        hideSkeleton(container, originalContent) {
+            container.innerHTML = originalContent;
+        }
+    };
+
+    // ==========================================================================
     // Initialize Everything
     // ==========================================================================
 
@@ -992,6 +1105,7 @@
         AnimationSystem.init();
         CounterSystem.init();
         FormSystem.init();
+        SkeletonLoaderSystem.init();
         ModalSystem.init();
         CursorSystem.init();
         ParallaxSystem.init();
