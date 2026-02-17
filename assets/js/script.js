@@ -1094,6 +1094,74 @@
     };
 
     // ==========================================================================
+    // Services Tabs System
+    // ==========================================================================
+
+    const ServicesTabsSystem = {
+        init() {
+            this.setupTabs();
+            this.handleHashNavigation();
+        },
+
+        setupTabs() {
+            const tabButtons = document.querySelectorAll('.service-tab');
+            if (!tabButtons.length) return;
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const serviceId = button.getAttribute('data-service');
+                    this.switchTab(serviceId);
+
+                    // Update URL hash for tracking
+                    window.history.pushState(null, '', `#servicio-${serviceId}`);
+                });
+            });
+        },
+
+        switchTab(serviceId) {
+            // Remove active class from all tabs and panels
+            document.querySelectorAll('.service-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.service-tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Add active class to selected tab and panel
+            const selectedTab = document.querySelector(`.service-tab[data-service="${serviceId}"]`);
+            const selectedPanel = document.querySelector(`.service-tab-panel[data-service="${serviceId}"]`);
+
+            if (selectedTab) selectedTab.classList.add('active');
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+
+                // Scroll to tabs section smoothly
+                setTimeout(() => {
+                    selectedPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        },
+
+        handleHashNavigation() {
+            // Check if URL has a hash for direct navigation
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#servicio-')) {
+                const serviceId = hash.replace('#servicio-', '');
+                this.switchTab(serviceId);
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash;
+                if (hash && hash.startsWith('#servicio-')) {
+                    const serviceId = hash.replace('#servicio-', '');
+                    this.switchTab(serviceId);
+                }
+            });
+        }
+    };
+
+    // ==========================================================================
     // Initialize Everything
     // ==========================================================================
 
@@ -1106,6 +1174,7 @@
         CounterSystem.init();
         FormSystem.init();
         SkeletonLoaderSystem.init();
+        ServicesTabsSystem.init();
         ModalSystem.init();
         CursorSystem.init();
         ParallaxSystem.init();
