@@ -388,15 +388,70 @@
             minSubmitInterval: 30,
             // Last submission timestamp
             lastSubmitTime: 0,
-            // reCAPTCHA v3 site key - Replace with your own key from https://www.google.com/recaptcha/admin
-            recaptchaSiteKey: '6Lf3B2YsAAAAAG6iTmz2MT7wQOwx22R-tk-CGHln'
+            // Cloudflare Turnstile site key - Replace with your own key from https://dash.cloudflare.com
+            turnstileSiteKey: '0x4AAAAAACiJfSLnqGKRMtIa'
         },
+
+        // Turnstile state
+        turnstileWidgetId: null,
+        turnstileResolve: null,
+        turnstileReject: null,
 
         init() {
             if (DOM.contactForm) {
                 DOM.contactForm.addEventListener('submit', (e) => this.handleSubmit(e));
                 this.setupValidation();
+                this.initTurnstile();
             }
+        },
+
+        initTurnstile() {
+            const renderWidget = () => {
+                const container = document.getElementById('turnstile-widget');
+                if (!container || typeof turnstile === 'undefined') return;
+                if (this.config.turnstileSiteKey === '0x4AAAAAACiJfSLnqGKRMtIa') return;
+
+                this.turnstileWidgetId = turnstile.render(container, {
+                    sitekey: this.config.turnstileSiteKey,
+                    size: 'invisible',
+                    theme: 'dark',
+                    callback: (token) => {
+                        const tokenField = document.getElementById('turnstile-token');
+                        if (tokenField) tokenField.value = token;
+                        if (this.turnstileResolve) {
+                            this.turnstileResolve(token);
+                            this.turnstileResolve = null;
+                            this.turnstileReject = null;
+                        }
+                    },
+                    'error-callback': () => {
+                        if (this.turnstileReject) {
+                            this.turnstileReject(new Error('Turnstile challenge failed'));
+                            this.turnstileResolve = null;
+                            this.turnstileReject = null;
+                        }
+                    }
+                });
+            };
+
+            if (typeof turnstile !== 'undefined') {
+                renderWidget();
+            } else {
+                window.addEventListener('load', renderWidget);
+            }
+        },
+
+        getTurnstileToken() {
+            return new Promise((resolve, reject) => {
+                if (typeof turnstile === 'undefined' || this.turnstileWidgetId === null) {
+                    resolve(null);
+                    return;
+                }
+                this.turnstileResolve = resolve;
+                this.turnstileReject = reject;
+                turnstile.reset(this.turnstileWidgetId);
+                turnstile.execute(this.turnstileWidgetId);
+            });
         },
 
         setupValidation() {
@@ -485,16 +540,14 @@
             submitBtn.disabled = true;
 
             try {
-                // reCAPTCHA v3: Generate token before submission
-                if (typeof grecaptcha !== 'undefined' && this.config.recaptchaSiteKey && !this.config.recaptchaSiteKey.includes('XXXX')) {
-                    try {
-                        const token = await grecaptcha.execute(this.config.recaptchaSiteKey, { action: 'contact_form' });
-                        const tokenField = document.getElementById('recaptcha-token');
-                        if (tokenField) tokenField.value = token;
-                        formData.set('recaptcha_token', token);
-                    } catch (recaptchaError) {
-                        console.warn('reCAPTCHA token generation failed:', recaptchaError);
+                // Cloudflare Turnstile: Get token before submission
+                try {
+                    const token = await this.getTurnstileToken();
+                    if (token) {
+                        formData.set('cf-turnstile-response', token);
                     }
+                } catch (turnstileError) {
+                    console.warn('Turnstile verification skipped:', turnstileError);
                 }
                 // Check if using demo mode (no API key configured)
                 const accessKey = formData.get('access_key');
@@ -1006,7 +1059,7 @@
         monitorFormSubmissions() {
             // Override the sendToApi method to handle connection errors
             const originalSendToApi = FormSystem.sendToApi;
-            FormSystem.sendToApi = async function(formData) {
+            FormSystem.sendToApi = async function (formData) {
                 try {
                     return await originalSendToApi.call(this, formData);
                 } catch (error) {
@@ -1060,8 +1113,8 @@
                     <p class="connection-error-message" data-es="No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente."
                         data-en="Could not connect to the server. Please check your internet connection and try again.">
                         ${currentLang === 'es'
-                            ? 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.'
-                            : 'Could not connect to the server. Please check your internet connection and try again.'}
+                    ? 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.'
+                    : 'Could not connect to the server. Please check your internet connection and try again.'}
                     </p>
                     <div class="connection-error-actions">
                         <button onclick="location.reload()" class="btn btn-primary">
