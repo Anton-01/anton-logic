@@ -389,7 +389,7 @@
             // Last submission timestamp
             lastSubmitTime: 0,
             // Cloudflare Turnstile site key - Replace with your own key from https://dash.cloudflare.com
-            turnstileSiteKey: 'YOUR_TURNSTILE_SITE_KEY'
+            turnstileSiteKey: '0x4AAAAAACiJfSLnqGKRMtIa'
         },
 
         // Turnstile state
@@ -409,7 +409,7 @@
             const renderWidget = () => {
                 const container = document.getElementById('turnstile-widget');
                 if (!container || typeof turnstile === 'undefined') return;
-                if (this.config.turnstileSiteKey === 'YOUR_TURNSTILE_SITE_KEY') return;
+                if (this.config.turnstileSiteKey === '0x4AAAAAACiJfSLnqGKRMtIa') return;
 
                 this.turnstileWidgetId = turnstile.render(container, {
                     sitekey: this.config.turnstileSiteKey,
@@ -1059,7 +1059,7 @@
         monitorFormSubmissions() {
             // Override the sendToApi method to handle connection errors
             const originalSendToApi = FormSystem.sendToApi;
-            FormSystem.sendToApi = async function(formData) {
+            FormSystem.sendToApi = async function (formData) {
                 try {
                     return await originalSendToApi.call(this, formData);
                 } catch (error) {
@@ -1113,8 +1113,8 @@
                     <p class="connection-error-message" data-es="No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente."
                         data-en="Could not connect to the server. Please check your internet connection and try again.">
                         ${currentLang === 'es'
-                            ? 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.'
-                            : 'Could not connect to the server. Please check your internet connection and try again.'}
+                    ? 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.'
+                    : 'Could not connect to the server. Please check your internet connection and try again.'}
                     </p>
                     <div class="connection-error-actions">
                         <button onclick="location.reload()" class="btn btn-primary">
