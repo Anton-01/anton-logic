@@ -2302,6 +2302,7 @@ h6 {
 
 /* Contact Form */
 .contact-form-wrapper {
+    position: relative;
     background: var(--color-white);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-xl);
@@ -2319,6 +2320,16 @@ h6 {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-lg);
+}
+
+/* Turnstile invisible widget: removed from grid flow so it never displaces form fields */
+#turnstile-widget {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 @media (min-width: 640px) {
