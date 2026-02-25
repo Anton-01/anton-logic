@@ -409,7 +409,7 @@
             const renderWidget = () => {
                 const container = document.getElementById('turnstile-widget');
                 if (!container || typeof turnstile === 'undefined') return;
-                if (this.config.turnstileSiteKey === '0x4AAAAAACiJfSLnqGKRMtIa') return;
+                if (!this.config.turnstileSiteKey || this.config.turnstileSiteKey === 'YOUR_TURNSTILE_SITE_KEY') return;
 
                 this.turnstileWidgetId = turnstile.render(container, {
                     sitekey: this.config.turnstileSiteKey,
