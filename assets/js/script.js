@@ -1215,6 +1215,31 @@
     };
 
     // ==========================================================================
+    // Primary Services Cards → Tab Navigation
+    // ==========================================================================
+
+    const PrimaryServicesSystem = {
+        init() {
+            const cards = document.querySelectorAll('.ps-card-link');
+            if (!cards.length) return;
+
+            cards.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const serviceId = btn.getAttribute('data-target');
+                    if (!serviceId) return;
+
+                    ServicesTabsSystem.switchTab(serviceId);
+
+                    const tabsSection = document.getElementById('services-all');
+                    if (tabsSection) {
+                        tabsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        }
+    };
+
+    // ==========================================================================
     // Initialize Everything
     // ==========================================================================
 
@@ -1228,6 +1253,7 @@
         FormSystem.init();
         SkeletonLoaderSystem.init();
         ServicesTabsSystem.init();
+        PrimaryServicesSystem.init();
         ModalSystem.init();
         CursorSystem.init();
         ParallaxSystem.init();
