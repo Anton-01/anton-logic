@@ -328,54 +328,6 @@
     };
 
     // ==========================================================================
-    // Counter Animation
-    // ==========================================================================
-
-    const CounterSystem = {
-        init() {
-            this.observeCounters();
-        },
-
-        observeCounters() {
-            const counters = document.querySelectorAll('[data-count]');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        this.animateCounter(entry.target);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            counters.forEach(counter => observer.observe(counter));
-        },
-
-        animateCounter(element) {
-            const target = parseInt(element.getAttribute('data-count'));
-            const duration = CONFIG.counterDuration;
-            const startTime = performance.now();
-
-            const updateCounter = (currentTime) => {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
-                // Easing function (ease-out)
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.round(easeOut * target);
-
-                element.textContent = current;
-
-                if (progress < 1) {
-                    requestAnimationFrame(updateCounter);
-                }
-            };
-
-            requestAnimationFrame(updateCounter);
-        }
-    };
-
-    // ==========================================================================
     // Form Handler
     // ==========================================================================
 
@@ -1249,7 +1201,6 @@
         LanguageSystem.init();
         NavigationSystem.init();
         AnimationSystem.init();
-        CounterSystem.init();
         FormSystem.init();
         SkeletonLoaderSystem.init();
         ServicesTabsSystem.init();
