@@ -209,32 +209,18 @@
 
         bindMobileMenu() {
             const navMenuClose = document.getElementById('nav-menu-close');
-            const navOverlay = document.getElementById('nav-overlay');
 
             if (DOM.navToggle && DOM.navMenu) {
                 // Open menu
                 DOM.navToggle.addEventListener('click', () => {
-                    const isOpen = DOM.navMenu.classList.contains('active');
-                    if (isOpen) {
-                        this.closeMobileMenu();
-                    } else {
-                        DOM.navToggle.classList.add('active');
-                        DOM.navMenu.classList.add('active');
-                        document.body.classList.add('no-scroll');
-                        if (navOverlay) navOverlay.classList.add('show');
-                    }
+                    DOM.navToggle.classList.toggle('active');
+                    DOM.navMenu.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
                 });
 
                 // Close button
                 if (navMenuClose) {
                     navMenuClose.addEventListener('click', () => {
-                        this.closeMobileMenu();
-                    });
-                }
-
-                // Close on overlay click
-                if (navOverlay) {
-                    navOverlay.addEventListener('click', () => {
                         this.closeMobileMenu();
                     });
                 }
@@ -257,11 +243,9 @@
         },
 
         closeMobileMenu() {
-            const navOverlay = document.getElementById('nav-overlay');
             DOM.navToggle?.classList.remove('active');
             DOM.navMenu?.classList.remove('active');
             document.body.classList.remove('no-scroll');
-            if (navOverlay) navOverlay.classList.remove('show');
         },
 
         bindSmoothScroll() {
