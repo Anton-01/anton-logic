@@ -289,3 +289,13 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,jetbrains,jetbrains+iml,jetbrains+all
+### Next.js / Node ###
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+.env*.local
+.vercel
+npm-debug.log*
