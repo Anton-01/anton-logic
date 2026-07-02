@@ -1,8 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import FeatureSplit from "@/components/FeatureSplit";
-import TabsSection from "@/components/TabsSection";
-import FaqAccordion from "@/components/FaqAccordion";
+import ServicesSection from "@/components/ServicesSection";
+import ProjectsSection from "@/components/ProjectsSection";
+import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
@@ -12,9 +12,9 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <FeatureSplit />
-        <TabsSection />
-        <FaqAccordion />
+        <ServicesSection />
+        <ProjectsSection />
+        <AboutSection />
         <ContactSection />
       </main>
       <Footer />

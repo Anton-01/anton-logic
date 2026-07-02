@@ -1,46 +1,51 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/plus-jakarta-sans";
 import "./globals.css";
+import { siteData } from "@/lib/siteData";
+
+const SITE_URL = "https://antonlogic.com";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://antonlogic.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Anton Logic — Scheduling Driven By Actual Media Insight",
+    default: siteData.meta_data.title,
     template: "%s | Anton Logic",
   },
-  description:
-    "Anton Logic brings your business data and systems together: scheduling, earnings, maintenance and growth insights in a single modern platform.",
+  description: siteData.meta_data.description,
   keywords: [
+    "desarrollo de software a medida",
+    "modernización de sistemas legacy",
+    "desarrollo web SEO",
+    "APIs RESTful",
+    "microservicios",
+    "software cloud",
     "Anton Logic",
-    "SaaS",
-    "scheduling",
-    "media insight",
-    "business data",
-    "analytics dashboard",
+    "Morelia",
   ],
   authors: [{ name: "Anton Logic" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://antonlogic.com",
+    locale: "es_MX",
+    url: SITE_URL,
     siteName: "Anton Logic",
-    title: "Anton Logic — Scheduling Driven By Actual Media Insight",
-    description:
-      "Bring your business data & systems together with Anton Logic's modern scheduling and analytics platform.",
+    title: siteData.meta_data.title,
+    description: siteData.meta_data.description,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Anton Logic — Scheduling Driven By Actual Media Insight",
+        alt: "Anton Logic — Desarrollo de Software a Medida",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anton Logic — Scheduling Driven By Actual Media Insight",
-    description:
-      "Bring your business data & systems together with Anton Logic's modern scheduling and analytics platform.",
+    title: siteData.meta_data.title,
+    description: siteData.meta_data.description,
     images: ["/og-image.png"],
   },
   icons: {
@@ -49,6 +54,62 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+/**
+ * JSON-LD Schema Markup (ProfessionalService + OfferCatalog).
+ * Estructura los servicios del sitio para que Google pueda mostrarlos
+ * como Sitelinks / fragmentos enriquecidos.
+ */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${SITE_URL}/#organization`,
+  name: "Anton Logic",
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.svg`,
+  image: `${SITE_URL}/og-image.png`,
+  description: siteData.meta_data.description,
+  telephone: siteData.contact_section.contact_info.phone,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Morelia",
+    addressRegion: "Michoacán",
+    addressCountry: "MX",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "México",
+  },
+  knowsAbout: [
+    "Desarrollo de software a medida",
+    "Modernización de sistemas legacy",
+    "Desarrollo web y SEO técnico",
+    "APIs RESTful y microservicios",
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: siteData.services_section.section_title,
+    itemListElement: siteData.services_section.items.map((service, index) => ({
+      "@type": "Offer",
+      position: index + 1,
+      url: `${SITE_URL}/#${service.id}`,
+      itemOffered: {
+        "@type": "Service",
+        "@id": `${SITE_URL}/#${service.id}`,
+        name: service.name,
+        description: service.description,
+        provider: { "@id": `${SITE_URL}/#organization` },
+        serviceType: service.name,
+      },
+    })),
   },
 };
 
@@ -58,7 +119,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="font-sans">{children}</body>
     </html>
   );

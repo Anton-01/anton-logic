@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Blog", href: "#blog" },
-];
+import { siteData } from "@/lib/siteData";
 
 function Logo() {
   return (
@@ -24,31 +18,6 @@ function Logo() {
   );
 }
 
-function CartIcon() {
-  return (
-    <button
-      type="button"
-      aria-label="Shopping cart"
-      className="relative rounded-full p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
-    >
-      <svg
-        className="h-5 w-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="9" cy="21" r="1" />
-        <circle cx="20" cy="21" r="1" />
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-      </svg>
-      <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-purple-500" />
-    </button>
-  );
-}
-
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -59,7 +28,7 @@ export default function Navbar() {
 
         {/* Center links (desktop) */}
         <ul className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+          {siteData.navigation.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
@@ -71,27 +40,20 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Right actions (desktop) */}
-        <div className="hidden items-center gap-3 md:flex">
-          <CartIcon />
+        {/* Primary CTA (desktop) */}
+        <div className="hidden md:block">
           <Link
-            href="#login"
-            className="rounded-full border border-slate-500 px-5 py-2 text-sm font-semibold text-white transition hover:border-white"
+            href="#contact"
+            className="rounded-full bg-purple-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-600"
           >
-            Log In
-          </Link>
-          <Link
-            href="#get-started"
-            className="rounded-full bg-purple-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:bg-purple-600"
-          >
-            Get Started
+            Hablemos
           </Link>
         </div>
 
         {/* Mobile toggle */}
         <button
           type="button"
-          aria-label="Toggle navigation menu"
+          aria-label="Abrir menú de navegación"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
           className="rounded-lg p-2 text-white transition hover:bg-white/10 md:hidden"
@@ -117,7 +79,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="border-t border-white/10 px-6 pb-6 pt-2 md:hidden">
           <ul className="flex flex-col gap-4">
-            {navLinks.map((link) => (
+            {siteData.navigation.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}
@@ -129,21 +91,13 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <div className="mt-6 flex items-center gap-3">
-            <CartIcon />
-            <Link
-              href="#login"
-              className="flex-1 rounded-full border border-slate-500 px-5 py-2 text-center text-sm font-semibold text-white"
-            >
-              Log In
-            </Link>
-            <Link
-              href="#get-started"
-              className="flex-1 rounded-full bg-purple-500 px-5 py-2 text-center text-sm font-semibold text-white"
-            >
-              Get Started
-            </Link>
-          </div>
+          <Link
+            href="#contact"
+            onClick={() => setMenuOpen(false)}
+            className="mt-6 block rounded-full bg-purple-500 px-6 py-2.5 text-center text-sm font-semibold text-white"
+          >
+            Hablemos
+          </Link>
         </div>
       )}
     </header>

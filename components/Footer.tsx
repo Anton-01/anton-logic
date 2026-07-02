@@ -1,12 +1,5 @@
 import Link from "next/link";
-
-const footerLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
-];
+import { siteData } from "@/lib/siteData";
 
 export default function Footer() {
   return (
@@ -20,7 +13,7 @@ export default function Footer() {
           <span className="text-lg font-bold text-white">Anton Logic</span>
         </div>
         <ul className="flex flex-wrap justify-center gap-6">
-          {footerLinks.map((link) => (
+          {siteData.navigation.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
@@ -32,7 +25,8 @@ export default function Footer() {
           ))}
         </ul>
         <p className="text-sm text-slate-500">
-          © {new Date().getFullYear()} Anton Logic. All rights reserved.
+          © {new Date().getFullYear()} Anton Logic. Todos los derechos
+          reservados.
         </p>
       </div>
     </footer>
