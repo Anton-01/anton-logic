@@ -1,170 +1,116 @@
 # Anton Logic
 
-> Professional Software Development & Digital Services Agency Website
-A modern, responsive single-page application featuring bilingual support, custom animations, glassmorphism design, and a tech-blue color palette. Built with vanilla HTML5, CSS3, and JavaScript for optimal performance.
+Sitio web de **Antonio Ortiz**, consultor independiente en tecnología: [antonlogic.com](https://antonlogic.com).
 
-![Anton Logic](https://img.shields.io/badge/Status-Active-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+Servicios:
 
-## Features
+1. Consultoría tecnológica
+2. Desarrollo web y software a medida
+3. Escalado y modernización de sistemas, incluidas la migración de sistemas legacy, la actualización de versiones de Java y el manejo avanzado de proyectos legacy en Java
+4. Administración de infraestructura en la nube
 
-- **Bilingual Support** - Full Spanish/English language switching with localStorage persistence
-- **Responsive Design** - Mobile-first approach with breakpoints at 640px, 768px, 1024px, and 1200px
-- **Modern Animations** - Custom AOS-like scroll animations, parallax effects, and smooth transitions
-- **Glassmorphism UI** - Contemporary design with glass-morphism cards and gradient overlays
-- **SEO Optimized** - Comprehensive meta tags, Open Graph, Twitter Cards, and JSON-LD structured data
-- **Accessibility** - Semantic HTML, ARIA labels, keyboard navigation, and focus management
-- **Performance** - No external dependencies, lazy loading, and optimized asset delivery
-- **Contact Form** - Integrated form with validation and notification system
+Es un sitio estático (HTML, CSS y JavaScript sin frameworks), bilingüe (español de México e inglés de EE. UU.) y generado con un script de Python sin dependencias.
 
-## Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| HTML5 | Semantic structure |
-| CSS3 | Custom properties, Grid, Flexbox, Animations |
-| JavaScript ES6+ | Interactivity, IntersectionObserver, LocalStorage |
-| Google Fonts | Space Grotesk & DM Sans typography |
-
-## Project Structure
+## Estructura
 
 ```
 anton-logic/
-├── index.html          # Main HTML file with all sections
-├── styles.css          # Complete styling with CSS variables
-├── script.js           # JavaScript modules and functionality
-├── favicon.svg         # Vector favicon
-├── README.md           # Project documentation
-└── .gitignore          # Git ignore rules
+├── index.html, services.html, faq.html,      # Páginas en español (generadas)
+│   contact.html, privacy.html, terms.html
+├── en/                                       # Mismas páginas en inglés (generadas)
+├── 404.html                                  # Página de error bilingüe, sin indexar (generada)
+├── sitemap.xml, robots.txt, site.webmanifest # (generados)
+├── assets/
+│   ├── css/styles.css                        # Sistema visual completo: tokens, componentes y rasgos
+│   ├── js/script.js                          # Mega-menú, menú móvil, idioma, anclas antiguas y formulario
+│   └── images/
+│       ├── og-*.png                          # Imágenes para redes sociales (generadas)
+│       └── favicon/                          # favicon.svg + PNG derivados (generados)
+└── tools/site/
+    ├── build.py                              # Generador de páginas, sitemap, robots y manifest
+    ├── legal.json                            # Texto de la política de privacidad y los términos (ES/EN)
+    └── og.py                                 # Generador de imágenes Open Graph e íconos PNG
 ```
 
-## Sections
+## Editar el contenido
 
-1. **Hero** - Eye-catching introduction with code mockup and statistics
-2. **Services** - Six service offerings with animated cards
-3. **About** - Company value proposition with feature highlights
-4. **Portfolio** - Featured projects showcase
-5. **Process** - Four-step workflow timeline
-6. **Contact** - Multi-channel contact information and form
-7. **Footer** - Links, social media, and legal information
+Los archivos HTML **se generan**. No los edites a mano: los cambios se perderían en la siguiente generación.
 
-## Color Palette
+1. Edita los textos en `tools/site/build.py`. Cada texto es un par `('español', 'inglés')`. Los servicios (`SERVICES`), el bloque de Java (`JAVA`), los pasos del enfoque (`STEPS`), los casos (`CASES`) y las preguntas frecuentes (`FAQ`) están en listas al inicio del archivo.
+2. Para la política de privacidad y los términos, edita `tools/site/legal.json` (HTML simple: `h2`, `h3`, `p`, `ul`, `li`, `strong`, `a`).
+3. Regenera el sitio:
 
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Primary Blue | `#0055FF` | Buttons, links, accents |
-| Secondary Teal | `#00D4AA` | Gradients, highlights |
-| Dark | `#0A1628` | Backgrounds, text |
-| White | `#FFFFFF` | Light sections, cards |
-
-## Getting Started
-
-### Prerequisites
-
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- A local web server (optional, for development)
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/antonlogic/anton-logic.git
-cd anton-logic
+python3 tools/site/build.py
 ```
 
-2. Open `index.html` in your browser or serve with a local server:
+Si cambias el titular, los servicios o el logotipo, regenera también las imágenes para redes sociales y los íconos (requiere Google Chrome):
+
 ```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx serve
-
-# Using PHP
-php -S localhost:8000
+python3 tools/site/og.py
 ```
 
-3. Visit `http://localhost:8000` in your browser.
+## Desarrollo local
 
-## Configuration
-
-### Language Settings
-
-The website defaults to Spanish but automatically detects browser language. Users can toggle between ES/EN using the header button. Preferences are saved in localStorage.
-
-### Contact Form
-
-The contact form currently simulates submission. For production, integrate with your preferred email service:
-
-- **Web3Forms** - Free, no backend required
-- **Formspree** - Simple form backend
-- **EmailJS** - Send emails directly from JavaScript
-- **Custom API** - Your own backend endpoint
-
-### Anti-Spam Protection
-
-Recommended protections for production:
-- **Honeypot field** - Hidden field to catch bots
-- **reCAPTCHA v3** - Invisible spam protection
-- **Rate limiting** - Server-side request throttling
-- **Input validation** - Client and server-side validation
-
-## Browser Support
-
-| Browser | Version |
-|---------|---------|
-| Chrome | 80+ |
-| Firefox | 75+ |
-| Safari | 13+ |
-| Edge | 80+ |
-
-## Performance
-
-- **Lighthouse Score**: 95+ Performance
-- **No external frameworks** - Reduced bundle size
-- **CSS Variables** - Efficient theming
-- **Lazy loading** - Deferred image loading
-- **Intersection Observer** - Efficient scroll handling
-
-## Customization
-
-### Colors
-
-Edit CSS variables in `styles.css`:
-```css
-:root {
-    --color-primary: #0055FF;
-    --color-secondary: #00D4AA;
-    --color-dark: #0A1628;
-}
+```bash
+python3 -m http.server 8000
 ```
 
-### Content
+Abre `http://localhost:8000`. Usa un servidor local: las rutas son absolutas (`/assets/...`, `/en/`) y no funcionan abriendo el archivo directamente.
 
-Update text using `data-es` and `data-en` attributes for bilingual support:
-```html
-<h1 data-es="Hola" data-en="Hello">Hola</h1>
-```
+## Idiomas
 
-## Contributing
+- Español en `/` (idioma por defecto) e inglés en `/en/`. Cada página tiene su URL, `canonical` y enlaces `hreflang` (`es-MX`, `en-US` y `x-default`).
+- El selector de idioma del encabezado muestra la bandera de México (español) o de EE. UU. (inglés) y lleva a la página equivalente en el otro idioma, conservando la sección.
+- La elección se guarda en `localStorage` (`antonlogic-lang-v2`) y se respeta en visitas siguientes. Nunca se redirige según el idioma del navegador, para que los buscadores indexen ambas versiones.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Diseño
 
-## License
+Sistema "Institucional": blanco dominante, bloques azul marino, un acento azul, retícula rígida y esquinas rectas. Los tokens están al inicio de `assets/css/styles.css`.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--brand` | `#0A2342` | Bloques oscuros, encabezados de página, logotipo |
+| `--brand-deep` | `#071A33` | Banda de cierre y pie de página |
+| `--accent` | `#1F5BD8` | Botones, enlaces, detalles y foco |
+| `--surface` | `#F1F4F8` | Secciones claras alternas |
+| `--text` / `--muted` | `#0B1526` / `#4A5568` | Texto principal y secundario |
 
-## Contact
+- Tipografía: Public Sans 400, 600 y 700 (Google Fonts).
+- Contenedor de 1200 px y secciones de 72 a 112 px de alto de relleno.
+- Secciones de dos columnas con un diagrama de un lado, alternando el lado y el fondo.
+- Mega-menú de Servicios con título y una línea de descripción por servicio.
+- Movimiento: solo transiciones de color y borde de 150 ms en hover y foco, desactivadas con `prefers-reduced-motion`.
+- Sin cifras de logros, testimonios, logos de clientes ni emojis.
 
-**Anton Logic**
-- Website: [antonlogic.com](https://antonlogic.com)
+## Accesibilidad
+
+- Contraste WCAG AA verificado en todas las páginas, en ambos idiomas.
+- Enlace para saltar al contenido, foco visible y objetivos táctiles de al menos 44 px.
+- Mega-menú, menú móvil y selector de idioma operables con teclado (Escape cierra y devuelve el foco; flechas en el selector de idioma).
+- Formulario con etiquetas, errores junto a cada campo (`aria-invalid`, `aria-describedby`) y estado en `aria-live`.
+
+## SEO
+
+- Títulos y descripciones únicos por página e idioma.
+- Datos estructurados JSON-LD: `WebSite`, `Person`, `ProfessionalService` con catálogo de servicios, `ItemList`, `FAQPage` y `BreadcrumbList`.
+- `sitemap.xml` con alternativas por idioma, `robots.txt` e imágenes Open Graph por idioma.
+- Las anclas del sitio anterior (`/#contact`, `/#portfolio`, `services.html#servicio-sistemas-legacy`, etc.) se redirigen a la sección o página equivalente (`LEGACY_ANCHORS` en `script.js`).
+
+## Formulario de contacto
+
+- Está en `contact.html`; todos los botones "Agenda una llamada" llevan ahí.
+- Se envía a [Web3Forms](https://web3forms.com). La clave pública está en `build.py`.
+- Antispam: Cloudflare Turnstile invisible, campo trampa (honeypot), un envío cada 30 segundos y filtro de patrones de spam.
+- El asunto del correo indica si el mensaje llegó desde la versión en inglés.
+
+## Despliegue
+
+Publica la raíz del repositorio en cualquier hosting estático. Configura `404.html` como página de error si el hosting no la detecta automáticamente.
+
+## Contacto
+
+- Web: [antonlogic.com](https://antonlogic.com)
 - Email: contacto@antonlogic.com
-- LinkedIn: [@antonlogic](https://linkedin.com/company/antonlogic)
-- Twitter: [@antonlogic](https://twitter.com/antonlogic)
-
----
-
-Built with passion by **Anton Logic** | Ciudad de Morelia, Michoacán, MX
+- Teléfono: +52 443 528 8990
+- Morelia, Michoacán, México
